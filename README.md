@@ -43,8 +43,8 @@ Dự án tích hợp 18 thuật toán, chia thành 6 nhóm bối cảnh chiến 
 ### Nhóm 2: Tìm kiếm có thông tin (Informed Search)
 *Bối cảnh: B-52 ĐỨNG YÊN. Radar đã chốt toạ độ. SAM-2 lập kế hoạch bay bằng Heuristic (Khoảng cách đường chim bay).*
 - **Greedy Search:** Bay mù quáng về hướng đích nhanh nhất, dễ kẹt vào bẫy nhiễu sóng chữ U.
-- **A* Search:** Cân bằng giữa quãng đường đã bay và Heuristic, vẽ quỹ đạo luồn lách né nhiễu thông minh.
-- **IDA*:** Hoạt động như A* nhưng kiểm soát bộ nhớ qua giới hạn "nhiên liệu" (f-cost threshold), tránh tràn RAM khi map lớn.
+- **A-Star Search:** Cân bằng giữa quãng đường đã bay và Heuristic, vẽ quỹ đạo luồn lách né nhiễu thông minh.
+- **IDA-Star:** Hoạt động như A* nhưng kiểm soát bộ nhớ qua giới hạn "nhiên liệu" (f-cost threshold), tránh tràn RAM khi map lớn.
 
 ### Nhóm 3: Tìm kiếm cục bộ (Local Search)
 *Bối cảnh: B-52 DI CHUYỂN VÔ TRI. SAM-2 không tính trước toàn bộ quỹ đạo mà điều chỉnh góc lái theo từng Khung hình (Frame).*
