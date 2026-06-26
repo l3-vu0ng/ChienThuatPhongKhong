@@ -111,5 +111,3 @@ python -m pytest tests/ -v
 - **Nút `FIRE`:** Kích hoạt Phase 2, khai hoả và xem tên lửa bay tiêu diệt mục tiêu với các hiệu ứng hình ảnh (VFX). (Chỉ áp dụng cho các thuật toán ngoài nhóm Đối kháng).
 - **Phím tắt hiện có:** `Left Arrow` / `Right Arrow` để lùi/tiến từng bước, `Esc` để thoát chương trình.
 
----
-*Dự án kết hợp chặt chẽ việc hiện thực hoá lý thuyết Trí Tuệ Nhân Tạo hiện đại vào hệ thống đồ hoạ và mô phỏng thực tiễn.*
