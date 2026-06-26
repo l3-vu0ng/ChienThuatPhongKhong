@@ -1,8 +1,0 @@
-src/docs/
-.venv/
-codegraph/
-.codegraph/
-tests/
-__pycache__/
-*.pyc
-*.pyo
