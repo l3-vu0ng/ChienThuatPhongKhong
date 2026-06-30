@@ -37,38 +37,86 @@ Dự án tích hợp 18 thuật toán, chia thành 6 nhóm bối cảnh chiến 
 ### Nhóm 1: Tìm kiếm mù (Uninformed Search)
 *Bối cảnh: B-52 ĐỨNG YÊN. Đài radar đứt liên lạc, tự dò tìm trên lưới mù.*
 - **Breadth-First Search (BFS):** Radar lan toả vòng tròn đồng tâm 360 độ.
+  
+  ![BFS](src/assets/gif/BFS.gif)
+
 - **Depth-First Search (DFS):** Tia sóng quét sâu một đường thẳng, đụng vật cản mới lùi lại (backtrack).
+  
+  ![DFS](src/assets/gif/DFS.gif)
+
 - **Iterative Deepening Search (IDS):** Quét tia giống DFS nhưng nâng dần công suất tia sóng từ khoảng cách gần ra xa.
+  
+  ![IDS](src/assets/gif/IDS.gif)
 
 ### Nhóm 2: Tìm kiếm có thông tin (Informed Search)
 *Bối cảnh: B-52 ĐỨNG YÊN. Radar đã chốt toạ độ. SAM-2 lập kế hoạch bay bằng Heuristic (Khoảng cách đường chim bay).*
 - **Greedy Search:** Bay mù quáng về hướng đích nhanh nhất, dễ kẹt vào bẫy nhiễu sóng chữ U.
+  
+  ![Greedy Search](src/assets/gif/GreedySearch.gif)
+
 - **A-Star Search:** Cân bằng giữa quãng đường đã bay và Heuristic, vẽ quỹ đạo luồn lách né nhiễu thông minh.
+  
+  ![A-Star Search](src/assets/gif/A_Star.gif)
+
 - **IDA-Star:** Hoạt động như A* nhưng kiểm soát bộ nhớ qua giới hạn "nhiên liệu" (f-cost threshold), tránh tràn RAM khi map lớn.
+  
+  ![IDA-Star](src/assets/gif/IDA_Star.gif)
 
 ### Nhóm 3: Tìm kiếm cục bộ (Local Search)
 *Bối cảnh: B-52 DI CHUYỂN VÔ TRI. SAM-2 không tính trước toàn bộ quỹ đạo mà điều chỉnh góc lái theo từng Khung hình (Frame).*
 - **Simple Hill Climbing:** Bẻ lái để bám đuôi liên tục, dễ kẹt ở Local Maxima (đám mây lớn).
+  
+  ![Simple Hill Climbing](src/assets/gif/SimpleHillClimbing.gif)
+
 - **Stochastic Hill Climbing:** Lâu lâu bẻ lái chệch hướng ngẫu nhiên để vọt thoát khỏi vùng mây nhiễu bị kẹt.
+  
+  ![Stochastic Hill Climbing](src/assets/gif/StochasticHillClimbing.gif)
+
 - **Local Beam:** Bắn loạt k quả đạn (Salvo). Quả nào lệch hướng quá xa tự hủy, các quả còn lại chia sẻ dữ liệu toạ độ bám đuổi để bủa vây B-52.
+  
+  ![Local Beam Search](src/assets/gif/LocalBeamSearch.gif)
 
 ### Nhóm 4: Môi trường phức tạp (Complex Environments)
 *Bối cảnh: B-52 ĐỨNG YÊN. Môi trường có gió bão ngẫu nhiên, tín hiệu radar chập chờn.*
 - **AND-OR Search:** Lập kế hoạch dự phòng đối phó với gió tạt ngẫu nhiên.
+  
+  ![AND-OR Search](src/assets/gif/AND_OR.gif)
+
 - **No Observation:** B-52 tàng hình 100%. Radar ngẫu nhiên khoanh vùng 3 vị trí tình nghi (Belief States). Bệ phóng rải BFS chạm 2 vị trí tình nghi, thu thập 2 đường đi và phóng 2 tên lửa kiểm tra cùng lúc (Phase 2 bắn song song).
+  
+  ![No Observation](src/assets/gif/NoObservation.gif)
+
 - **Partially Observable:** Radar chập chờn. Có 3 vị trí tình nghi, trong đó chắc chắn 1 vị trí là mục tiêu thực. Dùng BFS chung lõi với No Observation để phóng 2 tên lửa. Nếu trúng đúng vị trí B-52 thì báo Success.
+  
+  ![Partially Observable](src/assets/gif/PartiallyObservable.gif)
 
 ### Nhóm 5: Thoả mãn ràng buộc (CSP)
 *Bối cảnh: B-52 dự kiến ở 3 toạ độ. Cần phân công góc bắn cho 3 bệ phóng (L1, L2, L3) sao cho đạn không bay đan chéo.*
 - **Backtracking:** Thử gán tuần tự, gặp lỗi cắt chéo thì quay lui.
+  
+  ![Backtracking](src/assets/gif/Backtracking.gif)
+
 - **Forward Checking:** Khi gán xong 1 mục tiêu, gạch bỏ mục tiêu cắt chéo ở các bệ phóng khác ngay lập tức, tiết kiệm tài nguyên duyệt.
+  
+  ![Forward Checking](src/assets/gif/ForwardChecking.gif)
+
 - **Min-Conflicts:** Gán bừa tất cả bệ phóng. Hệ thống tráo đổi mục tiêu sao cho giảm thiểu số lỗi đan chéo. Tia đỏ loạn xạ tự gỡ rối thành quỹ đạo chuẩn.
+  
+  ![Min-Conflicts](src/assets/gif/Min_Conflicts.gif)
 
 ### Nhóm 6: Tìm kiếm đối kháng (Adversarial Search)
 *Bối cảnh: Trò chơi Zero-Sum. B-52 DI CHUYỂN CÓ TRÍ TUỆ lẩn trốn, SAM-2 (MAX) đối đầu B-52 (MIN). Hành động diễn ra đồng thời (Không có 2 phase tách biệt).*
 - **Minimax:** Tính trước mọi bước để ép góc đối phương hoàn hảo. (FPS có thể giảm).
+  
+  ![Minimax](src/assets/gif/Minimax.gif)
+
 - **Alpha-Beta Pruning:** Cắt tỉa nhánh thừa để tăng tốc độ tính toán, giữ FPS mượt 60 mà chiến thuật không đổi.
+  
+  ![Alpha-Beta Pruning](src/assets/gif/AlphaBeta.gif)
+
 - **Expectimax:** Coi phi công B-52 là Nút Xác Suất (đôi khi mắc sai lầm). SAM-2 bẻ lái bắt bài rủi ro thay vì phòng thủ tuyệt đối.
+  
+  ![Expectimax](src/assets/gif/Expectimax.gif)
 
 ## 4. Cài đặt và Chạy mô phỏng
 
