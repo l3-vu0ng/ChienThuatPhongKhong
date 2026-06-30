@@ -103,10 +103,12 @@ class BacktrackingCSP(BaseAlgorithm):
                 hud_metrics={
                     "Current Algorithm": "Backtracking CSP",
                     "Constraints": "\n- AllDiff(B-52)\n- Không giao quỹ đạo\n- Tránh B-52 khác",
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
                     "Assigned": str(len(assignment)),
-                    "Assignment": str([(k, v["target"]) for k, v in assignment.items()]),
+                    "Assignment": str([f"X{sam_list.index(k)+1}->D{b52_list.index(v['target'])+1}" for k, v in assignment.items()]),
                     "IsValid": str(is_valid_assignment(assignment)),
-                    "Paths": str([v["path"] for v in assignment.values()])
+                    "Paths": str([assignment[s]["path"] if s in assignment else [] for s in sam_list])
                 },
                 action_description=f"Thử gán: {[(k, v['target']) for k, v in assignment.items()]}"
             ))
@@ -153,10 +155,12 @@ class BacktrackingCSP(BaseAlgorithm):
                 hud_metrics={
                     "Current Algorithm": "Backtracking CSP", 
                     "Constraints": "\n- AllDiff(B-52)\n- Không giao quỹ đạo\n- Tránh B-52 khác",
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
                     "Status": "Success",
-                    "Assignment": str([(k, v["target"]) for k, v in final_assignment.items()]),
+                    "Assignment": str([f"X{sam_list.index(k)+1}->D{b52_list.index(v['target'])+1}" for k, v in final_assignment.items()]),
                     "IsValid": "True",
-                    "Paths": str([v["path"] for v in final_assignment.values()])
+                    "Paths": str([final_assignment[s]["path"] if s in final_assignment else [] for s in sam_list])
                 },
                 action_description=f"Hoàn tất phân công! Kết quả: {[(k, v['target']) for k, v in final_assignment.items()]}"
             ))
@@ -165,7 +169,12 @@ class BacktrackingCSP(BaseAlgorithm):
                 frontier=[],
                 explored=set(sam_list),
                 current_path=[],
-                hud_metrics={"Current Algorithm": "Backtracking CSP", "Status": "Failed"},
+                hud_metrics={
+                    "Current Algorithm": "Backtracking CSP", 
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
+                    "Status": "Failed"
+                },
                 action_description="Không tìm thấy phương án gán hợp lệ nào."
             ))
             
@@ -194,10 +203,12 @@ class ForwardCheckingCSP(BaseAlgorithm):
                 hud_metrics={
                     "Current Algorithm": "Forward Checking", 
                     "Constraints": "\n- AllDiff(B-52)\n- Không giao quỹ đạo\n- Tránh B-52 khác",
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
                     "Assigned": str(len(assignment)),
-                    "Assignment": str([(k, v["target"]) for k, v in assignment.items()]),
+                    "Assignment": str([f"X{sam_list.index(k)+1}->D{b52_list.index(v['target'])+1}" for k, v in assignment.items()]),
                     "IsValid": str(is_valid_assignment(assignment)),
-                    "Paths": str([v["path"] for v in assignment.values()])
+                    "Paths": str([assignment[s]["path"] if s in assignment else [] for s in sam_list])
                 },
                 action_description=f"Thử gán: {[(k, v['target']) for k, v in assignment.items()]}. Domains còn lại: {sum(len(d) for d in domains.values())} lựa chọn."
             ))
@@ -265,10 +276,12 @@ class ForwardCheckingCSP(BaseAlgorithm):
                 hud_metrics={
                     "Current Algorithm": "Forward Checking", 
                     "Constraints": "\n- AllDiff(B-52)\n- Không giao quỹ đạo\n- Tránh B-52 khác",
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
                     "Status": "Success",
-                    "Assignment": str([(k, v["target"]) for k, v in final_assignment.items()]),
+                    "Assignment": str([f"X{sam_list.index(k)+1}->D{b52_list.index(v['target'])+1}" for k, v in final_assignment.items()]),
                     "IsValid": "True",
-                    "Paths": str([v["path"] for v in final_assignment.values()])
+                    "Paths": str([final_assignment[s]["path"] if s in final_assignment else [] for s in sam_list])
                 },
                 action_description=f"Hoàn tất phân công cực nhanh! Kết quả: {[(k, v['target']) for k, v in final_assignment.items()]}"
             ))
@@ -277,7 +290,12 @@ class ForwardCheckingCSP(BaseAlgorithm):
                 frontier=[],
                 explored=set(sam_list),
                 current_path=[],
-                hud_metrics={"Current Algorithm": "Forward Checking", "Status": "Failed"},
+                hud_metrics={
+                    "Current Algorithm": "Forward Checking", 
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
+                    "Status": "Failed"
+                },
                 action_description="Không tìm thấy phương án gán hợp lệ nào."
             ))
         return history
@@ -342,10 +360,12 @@ class MinConflictsCSP(BaseAlgorithm):
                 hud_metrics={
                     "Current Algorithm": "Min-Conflicts", 
                     "Constraints": "\n- AllDiff(B-52)\n- Không giao quỹ đạo\n- Tránh B-52 khác",
+                    "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                    "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
                     "Step": str(step),
-                    "Assignment": str([(k, v["target"]) for k, v in assignment.items()]),
+                    "Assignment": str([f"X{sam_list.index(k)+1}->D{b52_list.index(v['target'])+1}" for k, v in assignment.items()]),
                     "IsValid": str(is_valid_assignment(assignment)),
-                    "Paths": str([v["path"] for v in assignment.values()])
+                    "Paths": str([assignment[s]["path"] if s in assignment else [] for s in sam_list])
                 },
                 action_description=f"Vòng lặp {step}: Đang cố sửa xung đột của {[(k, v['target']) for k, v in assignment.items()]}"
             ))
@@ -358,10 +378,12 @@ class MinConflictsCSP(BaseAlgorithm):
                     hud_metrics={
                         "Current Algorithm": "Min-Conflicts", 
                         "Constraints": "\n- AllDiff(B-52)\n- Không giao quỹ đạo\n- Tránh B-52 khác",
+                        "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                        "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
                         "Status": "Success",
-                        "Assignment": str([(k, v["target"]) for k, v in assignment.items()]),
+                        "Assignment": str([f"X{sam_list.index(k)+1}->D{b52_list.index(v['target'])+1}" for k, v in assignment.items()]),
                         "IsValid": "True",
-                        "Paths": str([v["path"] for v in assignment.values()])
+                        "Paths": str([assignment[s]["path"] if s in assignment else [] for s in sam_list])
                     },
                     action_description=f"Đã giải quyết xong mọi xung đột ở bước {step}! Kết quả: {[(k, v['target']) for k, v in assignment.items()]}"
                 ))
@@ -374,7 +396,7 @@ class MinConflictsCSP(BaseAlgorithm):
                     conflicted_vars.append(sam)
                     
             # Tránh rơi vào Cực tiểu Địa phương (Local Minima) bằng cách chèn 20% xác suất biến đổi một SAM ngẫu nhiên
-            if random.random() < 0.2: 
+            if not conflicted_vars or random.random() < 0.2: 
                 var = random.choice(sam_list)
             else:
                 var = random.choice(conflicted_vars)
@@ -398,7 +420,12 @@ class MinConflictsCSP(BaseAlgorithm):
             frontier=[v["target"] for v in assignment.values()],
             explored=set(sam_list),
             current_path=[],
-            hud_metrics={"Current Algorithm": "Min-Conflicts", "Status": "Failed"},
+            hud_metrics={
+                "Current Algorithm": "Min-Conflicts", 
+                "Variables": str([f"X{i+1}: {sam}" for i, sam in enumerate(sam_list)]),
+                "Domains": str([f"D{i+1}: {b52}" for i, b52 in enumerate(b52_list)]),
+                "Status": "Failed"
+            },
             action_description="Thất bại: Đạt giới hạn 100 bước mà vẫn còn xung đột."
         ))
         return history

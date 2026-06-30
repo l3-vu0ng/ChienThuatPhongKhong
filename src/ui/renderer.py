@@ -166,16 +166,18 @@ class UIRenderer:
             
         self.draw_polygon_glow(self.COLOR_SAM2, rotated_points)
 
-    def draw_b52(self, x, y, dx=0, dy=-1):
+    def draw_b52(self, x, y, dx=0, dy=-1, color=None):
         """
         Vẽ máy bay B-52 tại tọa độ lưới (x, y).
         Hỗ trợ xoay linh hoạt (dx, dy) và dự phòng (fallback) vẽ vector nếu ảnh bị lỗi.
         """
         cx, cy = x * self.cell_size + self.cell_size // 2, y * self.cell_size + self.cell_size // 2
         
+        draw_color = color if color else self.COLOR_B52
+
         if hasattr(self, 'img_b52') and self.img_b52:
             angle_deg = math.degrees(math.atan2(-dy, dx)) - 90
-            self.draw_image_with_glow(self.img_b52, (cx, cy), angle_deg, (255, 50, 50))
+            self.draw_image_with_glow(self.img_b52, (cx, cy), angle_deg, draw_color)
             return
 
         # Cơ chế Fallback: Vẽ mô hình máy bay ném bom B-52 bằng đa giác 2D
@@ -196,7 +198,7 @@ class UIRenderer:
             ry = px * sin_a + py * cos_a
             rotated_points.append((cx + rx, cy + ry))
             
-        self.draw_polygon_glow(self.COLOR_B52, rotated_points)
+        self.draw_polygon_glow(draw_color, rotated_points)
 
     def draw_grid_and_state(self, state, env_grid, current_step, total_steps, fixed_b52=None, fixed_sams=None, is_phase_2=False, history=None):
         """
@@ -327,6 +329,21 @@ class UIRenderer:
                 clear_surf = clear_font.render("CLEAR", True, (50, 255, 50))
                 self.screen.blit(clear_surf, (lx * self.cell_size - 10, ly * self.cell_size - 15))
 
+        is_csp = "CSP" in algo_name or "Forward" in algo_name or "Conflicts" in algo_name
+        csp_colors = [(50, 255, 50), (50, 200, 255), (255, 150, 50)]
+        
+        assigned_b52_colors = {}
+        if is_csp:
+            paths_str = state.hud_metrics.get("Paths", "[]")
+            try:
+                import ast
+                paths = ast.literal_eval(paths_str)
+                for i, path in enumerate(paths):
+                    if path and len(path) > 0:
+                        assigned_b52_colors[path[-1]] = csp_colors[i % len(csp_colors)]
+            except:
+                pass
+
         if fixed_b52:
             show_b52 = True
             algo_n = state.hud_metrics.get("Current Algorithm", algo_name)
@@ -342,8 +359,12 @@ class UIRenderer:
                     
             if show_b52:
                 if isinstance(fixed_b52, list):
-                    for b in fixed_b52:
-                        self.draw_b52(*b)
+                    for i, b in enumerate(fixed_b52):
+                        b_color = assigned_b52_colors.get(b, None)
+                        self.draw_b52(*b, color=b_color)
+                        if is_csp:
+                            label = self.font_small.render(f"D{i+1}", True, (255, 255, 255))
+                            self.screen.blit(label, (b[0] * self.cell_size + self.cell_size - 10, b[1] * self.cell_size - 10))
                 else:
                     self.draw_b52(*fixed_b52)
         elif "Adversarial" in algo_name or "Minimax" in algo_name or "Alpha-Beta" in algo_name or "Expectimax" in algo_name:
@@ -381,8 +402,11 @@ class UIRenderer:
                 pass
                 
         if fixed_sams:
-            for sx, sy in fixed_sams:
+            for i, (sx, sy) in enumerate(fixed_sams):
                 self.draw_sam2(sx, sy)
+                if is_csp:
+                    label = self.font_small.render(f"X{i+1}", True, (255, 255, 255))
+                    self.screen.blit(label, (sx * self.cell_size + 10, sy * self.cell_size - 15))
                 
         # Vẽ nhiều đường đạn (Cho CSP & thuật toán BFS phức tạp)
         if "Paths" in state.hud_metrics:
@@ -408,15 +432,15 @@ class UIRenderer:
                 if len(path) > 1:
                     pixel_points = [(px * self.cell_size + self.cell_size//2, py * self.cell_size + self.cell_size//2) for (px, py) in path]
                     if not is_phase_2:
-                        draw_color = csp_colors[i % len(csp_colors)] if "CSP" in algo_name else (50, 200, 50)
+                        draw_color = csp_colors[i % len(csp_colors)] if is_csp else (50, 200, 50)
                         pygame.draw.lines(self.screen, draw_color, False, pixel_points, 2)
                     else:
                         if status in ["Success", "Destroyed"]:
-                            draw_color = csp_colors[i % len(csp_colors)] if "CSP" in algo_name else (50, 255, 50)
+                            draw_color = csp_colors[i % len(csp_colors)] if is_csp else (50, 255, 50)
                         elif not is_valid or status in ["Failed", "Missed"]:
                             draw_color = (255, 50, 50)
                         else:
-                            draw_color = csp_colors[i % len(csp_colors)] if "CSP" in algo_name else self.COLOR_PATH
+                            draw_color = csp_colors[i % len(csp_colors)] if is_csp else self.COLOR_PATH
                         pygame.draw.lines(self.screen, draw_color, False, pixel_points, base_thickness)
                 
 

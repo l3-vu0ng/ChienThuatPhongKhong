@@ -86,21 +86,26 @@ def run_simulation(algo_name):
         history = NoObservationSearch().run_no_observation(env, start_pos, belief_states, target_pos)
         fixed_b52 = target_pos
     elif algo_name == "Partially Observable":
-        belief_states = [target_pos]
-        while len(belief_states) < 3:
-            rx, ry = random.randint(0, 29), random.randint(0, 29)
-            if (rx, ry) not in belief_states and env.grid[ry][rx] == 0:
-                belief_states.append((rx, ry))
-        random.shuffle(belief_states)
+        if "fixed_beliefs" in locals():
+            belief_states = fixed_beliefs
+        else:
+            belief_states = [target_pos]
+            while len(belief_states) < 3:
+                rx, ry = random.randint(0, 29), random.randint(0, 29)
+                if (rx, ry) not in belief_states and env.grid[ry][rx] == 0:
+                    belief_states.append((rx, ry))
+            random.shuffle(belief_states)
+            
         history = PartiallyObservableSearch().run_partial_observation(env, start_pos, belief_states, target_pos)
         fixed_b52 = target_pos
     elif algo_name in ["Backtracking CSP", "Forward Checking CSP", "Min-Conflicts CSP"]:
-        sam_list = [(5, 29), (15, 29), (25, 29)]
-        b52_list = []
-        while len(b52_list) < 3:
-            rx, ry = random.randint(0, 29), random.randint(0, 15)
-            if (rx, ry) not in b52_list and env.grid[ry][rx] == 0:
-                b52_list.append((rx, ry))
+        if "sam_list" not in locals() or "b52_list" not in locals():
+            sam_list = [(5, 29), (15, 29), (25, 29)]
+            b52_list = []
+            while len(b52_list) < 3:
+                rx, ry = random.randint(0, 29), random.randint(0, 15)
+                if (rx, ry) not in b52_list and env.grid[ry][rx] == 0:
+                    b52_list.append((rx, ry))
         
         if algo_name == "Backtracking CSP":
             history = BacktrackingCSP().run_csp(env, sam_list, b52_list)
